@@ -5,7 +5,7 @@ import numpy as np
 import torch
 import pickle
 
-NO_GRAPHICS = False 
+NO_GRAPHICS = True 
 GPU_SERVER = False 
 TRAIN_MODE = True
 
@@ -30,19 +30,19 @@ states = env_info.vector_observations
 state_size = states.shape[1]
 print('There are {} agents. Each observes a state with length: {}'.format(states.shape[0], state_size))
 print('The state for the first agent looks like:', states[0])
+print('The state for the second agent looks like:', states[1])
 
 agents = [Agent(state_size, action_size, seed=0),Agent(state_size, action_size, seed=0)]
 
 scores_window = deque(maxlen=100)
 all_scores = []
 i_episode = 1
-
-while i_episode < 3000:
+print('\nTraining the Agents...\n')
+while True:
 		env_info = env.reset(train_mode=TRAIN_MODE)[brain_name]     
 		states = env_info.vector_observations                  
 		scores = [0]*len(agents)
-		dones = [False]*len(agents)
-		while not any(dones):
+		while True:
 			actions = [agent.get_action(state,add_noise=TRAIN_MODE) for agent,state in zip(agents,states)]
 			env_info = env.step(np.concatenate(actions,axis=0))[brain_name]           
 			next_states = env_info.vector_observations       
@@ -53,6 +53,8 @@ while i_episode < 3000:
 			for i,s in enumerate(rewards):
 				scores[i] += s
 			states = next_states
+			if np.any(dones):
+				break
 		scores_window.append(scores)
 		all_scores.append(scores)
 		max_score = np.max([np.mean([x[i] for x in scores_window]) for i in range(len(agents))])
@@ -60,7 +62,7 @@ while i_episode < 3000:
 			print('Score (max over agents) from episode {}: {:.4f}'.format(i_episode, max_score))
 		if  max_score >= 0.5:
 			print('The agent solved the environment after {} episodes, with a score of score {:.4f}'.format(i_episode, max_score))
-			for i,agent in enumerate(Agents):
+			for i,agent in enumerate(agents):
 				torch.save(agent.actor_local.state_dict(), 'checkpoint/{}_actor_{}.pth'.format(i_episode,i))
 				torch.save(agent.critic_local.state_dict(), 'checkpoint/{}_critic_{}.pth'.format(i_episode,i))
 			with open('scores.pkl','wb') as f:
