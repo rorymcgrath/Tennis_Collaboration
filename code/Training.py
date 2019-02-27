@@ -41,19 +41,22 @@ print('\nTraining the Agents...\n')
 #we could train one agent against itself by flipping the x on position and velocity of the paddle.
 #so we train one agent but for the second observation we flip the x [1,1,1,1,-1,1,-1,1]*3
 agent = Agent(state_size, action_size, seed=0)
-state_mask = [1,1,1,1,-1,1,-1,1]*3
+state_mask = [-1,1]*12
 while True:
 		env_info = env.reset(train_mode=TRAIN_MODE)[brain_name]     
 		states = env_info.vector_observations                  
+		#mirror_states = [state*state_mask for state in states]
+
+		states[1]*=state_mask
 		scores = [0]*num_agents
 		while True:
 			
 			#call get action twice on the same agent, the second state is flipped.
 			#actions are relative to the net so no need to flip returned actions
-			actions = [agent.get_action(states[0],add_noise=TRAIN_MODE), agent.get_action(states[1]*state_mask,add_noise=TRAIN_MODE)]
-
+			actions = [agent.get_action(state,add_noise=TRAIN_MODE) for state in states]
 			env_info = env.step(np.concatenate(actions,axis=0))[brain_name]           
 			next_states = env_info.vector_observations       
+			next_states[1]*=state_mask
 			rewards = env_info.rewards                         
 			dones = env_info.local_done
 			
@@ -78,7 +81,13 @@ while True:
 			with open('scores.pkl','wb') as f:
 				pickle.dump(all_scores,f)
 			break
+		if i_episode % 1000 == 0:
+			print('Saving checkpoint... ')
+			torch.save(agent.actor_local.state_dict(), 'actor_checkpoint.pth')
+			torch.save(agent.critic_local.state_dict(), 'critic_checkpoint.pth')
+			print('Checkpoint saved.')
 		i_episode+=1
+
 env.close()
 with open('scores.pkl','wb') as f:
 	pickle.dump(all_scores,f)

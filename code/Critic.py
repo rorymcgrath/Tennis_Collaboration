@@ -21,9 +21,9 @@ class Critic(nn.Module):
 		'''
 		super(Critic,self).__init__()
 		self.seed = torch.manual_seed(seed)
-		self.fc1 = nn.Linear(state_size,256)
-		self.fc2 = nn.Linear(256+action_size,128)
-		self.fc3 = nn.Linear(128,1)
+		self.fc1 = nn.Linear(state_size,32)
+		self.fc2 = nn.Linear(32+action_size,16)
+		self.fc3 = nn.Linear(16,1)
 
 	def forward(self,state,action):
 		'''Build the network that estimates the value function for the state action pair.
