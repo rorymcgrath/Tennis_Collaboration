@@ -17,7 +17,7 @@ GAMMA = 0.99
 TAU = 1e-3
 WEIGHT_DECAY = 0
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-UPDATE_EVERY = 5
+UPDATE_EVERY = 1
 
 class Agent():
 	'''This agent Interacts with the environment to learn a policy that yields the highest commulative reward.
@@ -120,7 +120,8 @@ class Agent():
 			action = self.actor_local(state).cpu().data.numpy()
 		self.actor_local.train()
 		if add_noise:
-			action+=self.noise.sample()
+			if(np.random.random()<=epsilon):
+				action+=self.noise.sample()
 		return np.clip(action,-1,1)
 
 	def train_model_parameters(self, experiences):
