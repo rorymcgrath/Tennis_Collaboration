@@ -29,7 +29,7 @@ The task is episodic, and in order to solve the environment, your agents must ge
 Specifically,
 \begin{itemize}
 \item After each episode, the rewards that each agent received are summed up (without discounting), to get a score for each agent. 
-This yields two seperate scores. 
+This yields two separate scores. 
 We then take the maximum of these two scores.
 \item This yields a single score for each episode.
 The environment is considered solved, when the average (over 100 episodes) of those scores is at least +0.5.
@@ -43,7 +43,7 @@ However, this approach when then replaced by training one agent to play against 
 
 In order to train a single agent to play against itself the symmetry of the game was exploited.
 The main difference between playing on the left or right side of the court is the sign of the x coordinates in the state space.
-To train a single agent all states observations were transformed such that they apperared on the right side of the net.
+To train a single agent all states observations were transformed such that they appeared on the right side of the net.
 In order to transform the data the elements in the state vector were multiplied by the following vector:
 \begin{equation}
 state \circ [-1,1,-1,1,...,-1,1]
@@ -52,9 +52,9 @@ This allowed a single agent that could generalise to both sides of the net to be
 As the actions are relative to the net the do not have to be transformed.
 After the states were transformed the agent was trained using DDPG.
 
-Similar to DQN, DDPG uses deep artifical neural networks as large non-linear function approximators for the value function.
-In order to train these function approximators in a stabe and robust way DDPG also uses a Replay Buffer\cite{experience_replay} and updates the target networks with "soft target updates" \cite{ddpg_paper}.
-The DDPG maintains four seperate ANNs.
+Similar to DQN, DDPG uses deep artificial neural networks as large non-linear function approximators for the value function.
+In order to train these function approximations in a stable and robust way DDPG also uses a Replay Buffer\cite{experience_replay} and updates the target networks with "soft target updates" \cite{ddpg_paper}.
+The DDPG maintains four separate ANNs.
 Two are the local and target actor functions and two are the local and target critic functions.
 The actor function $\mu(s|\theta^{\mu})$ specifies the current policy by deterministically mapping states to a specific action.
 The critic function $Q(s,a)$ is learned using the Bellman equation.
@@ -85,7 +85,7 @@ The activation functions for the input and hidden layer was the rectified linear
 The output layers activation function was the hyperbolic tangent function (tanh). 
 This maps the output to a range between -1 and 1 which is the required to control moving toward the net and jumping.
 
-The ANN used for the critic has a similar arthecture and consisted of an input layer of 24 nodes, one dense hidden layer of 32 nodes and an output layer of 1 node. 
+The ANN used for the critic has a similar architecture and consisted of an input layer of 24 nodes, one dense hidden layer of 32 nodes and an output layer of 1 node. 
 The action tensor was added to the last hidden layer similar to the paper \cite{ddpg_paper}.
 
 The following hyper-parameters were used to train the agent:
@@ -152,7 +152,7 @@ The following hyper-parameters were used to train the agent:
 \end{table}
 
 The model was trained for 1636 episodes. 
-After 1,536 episodes the model solved the environment obtaining an average score of over 0.5 for 100 consecitive episodes.
+After 1,536 episodes the model solved the environment obtaining an average score of over 0.5 for 100 consecutive episodes.
 A plot of the reward verses episode number is given in [Fig \ref{results}].
 
 \begin{figure}
@@ -166,8 +166,8 @@ A plot of the reward verses episode number is given in [Fig \ref{results}].
 \section{Future Work}
 There are several improvements that could be implemented to decrease training time and increase the average reward.
 
-One of the most difficult aspects of this project was find hyper-aparameter that lead to stable learning.
-Trying out variations of hyper-parameters along with different network achitectures was extreamly time consuming.
+One of the most difficult aspects of this project was find hyper-parameter that lead to stable learning.
+Trying out variations of hyper-parameters along with different network architectures was extremely time consuming.
 A hyper-parameter optimisation technique such as grid search could be implemented to help converge on good choices for the parameters 
 specified above. 
 Here you could set the ranges and combinations you wanted to investigate and run the search on a gpu server.
