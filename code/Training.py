@@ -40,16 +40,14 @@ all_scores = []
 i_episode = 1
 print('\nTraining the Agents...\n')
 
-#we could train one agent against itself by flipping the x on position and velocity of the paddle.
-#so we train one agent but for the second observation we flip the x [1,1,1,1,-1,1,-1,1]*3
+#we could train one agent against itself by flipping the x on position and velocity of the paddle and ball.
+#so we train one agent but for the second observation we flip the x [-1,1,-1,1,-1,1,-1,1]*3
 agent = Agent(state_size, action_size, seed=0)
 state_mask = [-1,1]*12
 eps = EPS_START
 while True:
 		env_info = env.reset(train_mode=TRAIN_MODE)[brain_name]     
 		states = env_info.vector_observations                  
-		#mirror_states = [state*state_mask for state in states]
-
 		states[1]*=state_mask
 		scores = [0]*num_agents
 		
