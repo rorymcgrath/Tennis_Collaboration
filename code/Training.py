@@ -40,8 +40,8 @@ all_scores = []
 i_episode = 1
 print('\nTraining the Agents...\n')
 
-#we could train one agent against itself by flipping the x on position and velocity of the paddle and ball.
-#so we train one agent but for the second observation we flip the x [-1,1,-1,1,-1,1,-1,1]*3
+#We can train one agent against itself by inverteing the x coordinate for the position and velocity of the paddle and ball.
+#We train one agent but for the second observation we transform the x using [-1,1,-1,1,-1,1,-1,1]*3
 agent = Agent(state_size, action_size, seed=0)
 state_mask = [-1,1]*12
 eps = EPS_START
@@ -53,8 +53,8 @@ while True:
 		
 		while True:
 			
-			#call get action twice on the same agent, the second state is flipped.
-			#actions are relative to the net so no need to flip returned actions
+			#Call get action twice on the same agent, the second state is tranmsformed.
+			#Actions are relative to the net so no need to flip returned actions
 			actions = [agent.get_action(state,eps,add_noise=TRAIN_MODE) for state in states]
 			env_info = env.step(np.concatenate(actions,axis=0))[brain_name]           
 			next_states = env_info.vector_observations       
@@ -62,19 +62,22 @@ while True:
 			rewards = env_info.rewards                         
 			dones = env_info.local_done
 			
-			#then step the agent twice
+			#Step the agent twice
 			for i in range(num_agents):
 				agent.step(states[i],actions[i],rewards[i],next_states[i],dones[i])
 			
 			for i,s in enumerate(rewards):
 				scores[i] += s
 			states = next_states
+
 			if np.any(dones):
 				break
+
 		scores_window.append(scores)
 		all_scores.append(scores)
 		average_scores = [np.mean([x[i] for x in scores_window]) for i in range(num_agents)]
 		max_score = np.max(average_scores)
+		
 		if i_episode % 100 == 0:
 			print('Average score (max over agents) at episode {} : {:.4f}'.format(i_episode, max_score))
 			print('Agent 0: {:.4f}\tAgent 1: {:.4f}'.format(*average_scores))
