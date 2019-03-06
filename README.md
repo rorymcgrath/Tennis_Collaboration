@@ -1,6 +1,7 @@
 [//]: # (Image References)
 
-[image1]: https://user-images.githubusercontent.com/10624937/42135623-e770e354-7d12-11e8-998d-29fc74429ca2.gif "Trained Agent"
+[image1]: https://user-images.githubusercontent.com/1038278/53906181-25efc300-4042-11e9-9379-8435e47d9d42.gif "Trained Agent"
+
 [image2]: https://user-images.githubusercontent.com/10624937/42386929-76f671f0-8106-11e8-9376-f17da2ae852e.png "Kernel"
 
 # Tennis : Collaboration and Competition
